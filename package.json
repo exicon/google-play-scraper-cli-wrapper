@@ -1,0 +1,31 @@
+{
+  "name": "google-play-scraper-cli-wrapper",
+  "version": "0.0.1",
+  "description": "A CLI wrapper for google-play-scraper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "google-play-scraper": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exicon/google-play-scraper-cli-wrapper.git"
+  },
+  "keywords": [
+    "google-play-scraper",
+    "cli"
+  ],
+  "author": "Peter Romfeld",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/exicon/google-play-scraper-cli-wrapper/issues"
+  },
+  "homepage": "https://github.com/exicon/google-play-scraper-cli-wrapper#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "google-play-scraper": "^3.3.1",
+    "lodash": "^4.17.4"
+  }
+}
