@@ -2,7 +2,6 @@
 
 const program = require('commander')
 const gplay = require('google-play-scraper')
-const _ = require('lodash')
 
 program
   .usage('<cmd> [options] \n\n  Refer to https://github.com/facundoolano/google-play-scraper')
@@ -15,13 +14,9 @@ program
   .option('-c, --country <cc>', '(optional, defaults to \'us\'): the two letter country code used to retrieve the applications. Needed when the app is available only in some countries. Geo Location (gl)')
 
   .action(args => {
-    const options = {
-      appId: args.appId,
-      lang: args.lang,
-      country: args.country
-    }
-    gplay.app(_.omitBy(options, _.isUndefined))
-    .then(handle_result, handle_error)
+    const options = (({ appId, lang, country }) => ({ appId, lang, country }))(args)
+    gplay.app(options)
+      .then(handle_result, handle_error)
   })
 
 program
@@ -37,18 +32,11 @@ program
   .option('-F, --full-detail', '(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
 
   .action(args => {
-    const options = {
-      collection: gplay.collection[args.collection],
-      category: gplay.category[args.category],
-      age: gplay.age[args.age],
-      num: args.num,
-      start: args.start,
-      lang: args.lang,
-      country: args.country,
-      fullDetail: args.fullDetail
-    }
-    gplay.list(_.omitBy(options, _.isUndefined))
-    .then(handle_result, handle_error)
+    const options = (({ collection, category, age, num, start, lang, country, fullDetail }) => ({ collection, category, age, num, start, lang, country, fullDetail }))(args)
+    options.collection = gplay.collection[options.collection]
+    options.category = gplay.category[options.collection]
+    gplay.list(options)
+      .then(handle_result, handle_error)
   })
 
 program
@@ -65,16 +53,9 @@ program
                                    paid: Paid apps only\n`)
 
   .action(args => {
-    const options = {
-      term: args.term,
-      num: args.num,
-      lang: args.lang,
-      country: args.country,
-      fullDetail: args.fullDetail,
-      price: args.price
-    }
-    gplay.search(_.omitBy(options, _.isUndefined))
-    .then(handle_result, handle_error)
+    const options = (({ term, num, lang, country, fullDetail, price }) => ({ term, num, lang, country, fullDetail, price }))(args)
+    gplay.search(options)
+      .then(handle_result, handle_error)
   })
 
 program
@@ -83,19 +64,13 @@ program
   .option('-d, --dev-id <developer name>', 'the name of the developer.')
   .option('-l, --lang <lang>', '(optional, defaults to \'en\'): the two letter language code in which to fetch the app page. Human Language (hl)')
   .option('-c, --country <cc>', '(optional, defaults to \'us\'): the two letter country code used to retrieve the applications. Needed when the app is available only in some countries. Geo Location (gl)')
-  .option('-n, --num <n>', '(optional, defaults to 20): the amount of apps to retrieve.\n', parseInt)
+  .option('-n, --num <n>', '(optional, defaults to 20): the amount of apps to retrieve.', parseInt)
   .option('-F, --full-detail', '(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
 
   .action(args => {
-    const options = {
-      devId: args.devId,
-      lang: args.lang,
-      country: args.country,
-      num: args.num,
-      fullDetail: args.fullDetail
-    }
-    gplay.developer(_.omitBy(options, _.isUndefined))
-    .then(handle_result, handle_error)
+    const options = (({ devId, lang, country, num, fullDetail }) => ({ devId, lang, country, num, fullDetail }))(args)
+    gplay.developer(options)
+      .then(handle_result, handle_error)
   })
 
 program
@@ -104,8 +79,9 @@ program
   .option('-t, --term <term>', 'the term to search by.')
 
   .action(args => {
-    gplay.suggest({term: args.term})
-    .then(handle_result, handle_error)
+    const options = (({ term }) => ({ term }))(args)
+    gplay.suggest(options)
+      .then(handle_result, handle_error)
   })
 
 program
@@ -114,17 +90,13 @@ program
   .option('-i, --app-id <app-id>', 'Unique application id for Google Play.')
   .option('-l, --lang <lang>', '(optional, defaults to \'en\'): the two letter language code in which to fetch the app page. Human Language (hl)')
   .option('-s, --sort <SORT>', '(optional, defaults to NEWEST): The way the reviews are going to be sorted. Accepted values are: NEWEST, RATING and HELPFULNESS.')
-  .option('-p, --page <n>', '(optional, defaults to 0): Number of page that contains reviews. Every page has 40 reviews at most.\n')
+  .option('-p, --page <n>', '(optional, defaults to 0): Number of page that contains reviews. Every page has 40 reviews at most.', parseInt)
 
   .action(args => {
-    const options = {
-      appId: args.appId,
-      lang: args.lang,
-      sort: gplay.category[args.sort],
-      page: args.page
-    }
-    gplay.reviews(_.omitBy(options, _.isUndefined))
-    .then(handle_result, handle_error)
+    const options = (({ appId, lang, sort, page }) => ({ appId, lang, sort, page }))(args)
+    options.sort = gplay.sort[options.sort]
+    gplay.reviews(options)
+      .then(handle_result, handle_error)
   })
 
 program
@@ -135,34 +107,26 @@ program
   .option('-F, --full-detail', '(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
 
   .action(args => {
-    const options = {
-      appId: args.appId,
-      lang: args.lang,
-      fullDetail: args.fullDetail
-    }
-    gplay.similar(_.omitBy(options, _.isUndefined))
-    .then(handle_result, handle_error)
+    const options = (({ appId, lang, fullDetail }) => ({ appId, lang, fullDetail }))(args)
+    gplay.similar(options)
+      .then(handle_result, handle_error)
   })
 
-  program
-    .command('permissions')
-    .description('Returns the list of permissions an app has access to.')
-    .option('-i, --app-id <app-id>', 'Unique application id for Google Play.')
-    .option('-l, --lang <lang>', '(optional, defaults to \'en\'): the two letter language code in which to fetch the app page. Human Language (hl)')
-    .option('-short, --short', '(optional, defaults to false): if true, the permission names will be returned instead of permission/description objects.')
+program
+  .command('permissions')
+  .description('Returns the list of permissions an app has access to.')
+  .option('-i, --app-id <app-id>', 'Unique application id for Google Play.')
+  .option('-l, --lang <lang>', '(optional, defaults to \'en\'): the two letter language code in which to fetch the app page. Human Language (hl)')
+  .option('--short', '(optional, defaults to false): if true, the permission names will be returned instead of permission/description objects.')
 
-    .action(args => {
-      const options = {
-        appId: args.appId,
-        lang: args.lang,
-        short: args.short
-      }
-      gplay.permissions(_.omitBy(options, _.isUndefined))
+  .action(args => {
+    const options = (({ appId, lang, short }) => ({ appId, lang, short }))(args)
+    gplay.permissions(options)
       .then(handle_result, handle_error)
-    })
+  })
 
 function handle_result(res){
-  console.log(res)
+  console.log(JSON.stringify(res))
   process.exit(0)
 }
 function handle_error(err){
