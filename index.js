@@ -91,9 +91,10 @@ program
   .option('-l, --lang <lang>', '(optional, defaults to \'en\'): the two letter language code in which to fetch the app page. Human Language (hl)')
   .option('-s, --sort <SORT>', '(optional, defaults to NEWEST): The way the reviews are going to be sorted. Accepted values are: NEWEST, RATING and HELPFULNESS.')
   .option('-p, --page <n>', '(optional, defaults to 0): Number of page that contains reviews. Every page has 40 reviews at most.', parseInt)
+  .option('--proxy <proxy>', 'set proxy to use')
 
   .action(args => {
-    const options = (({ appId, lang, sort, page }) => ({ appId, lang, sort, page }))(args)
+    const options = (({ appId, lang, sort, page, proxy }) => ({ appId, lang, sort, page, proxy }))(args)
     options.sort = gplay.sort[options.sort]
     gplay.reviews(options)
       .then(handle_result, handle_error)
@@ -105,6 +106,7 @@ program
   .option('-i, --app-id <app-id>', 'Unique application id for Google Play.')
   .option('-l, --lang <lang>', '(optional, defaults to \'en\'): the two letter language code in which to fetch the app page. Human Language (hl)')
   .option('-F, --full-detail', '(optional, defaults to false): if true, an extra request will be made for every resulting app to fetch its full detail.')
+  .option('--proxy <proxy>', 'set proxy to use')
 
   .action(args => {
     const options = (({ appId, lang, fullDetail }) => ({ appId, lang, fullDetail }))(args)

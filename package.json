@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/exicon/google-play-scraper-cli-wrapper#readme",
   "dependencies": {
-    "google-play-scraper": "^3.3.1",
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "google-play-scraper": "git://github.com/exicon/google-play-scraper.git#dev"
   }
 }
